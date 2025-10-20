@@ -1,0 +1,104 @@
+{
+  "smartphones": [
+    {
+      "id": 1,
+      "brand": "Apple",
+      "model": "iPhone 15 Pro",
+      "price": 1200,
+      "image": "https://cdn.pixabay.com/photo/2017/01/23/23/57/iphone-2009417_1280.png"
+    },
+    {
+      "id": 2,
+      "brand": "Apple",
+      "model": "iPhone 14",
+      "price": 999,
+      "image": "https://cdn.pixabay.com/photo/2016/11/19/14/00/iphone-1836071_1280.jpg"
+    },
+    {
+      "id": 3,
+      "brand": "Samsung",
+      "model": "Galaxy S24 Ultra",
+      "price": 1100,
+      "image": "https://cdn.pixabay.com/photo/2015/09/05/22/46/samsung-926754_1280.jpg"
+    },
+    {
+      "id": 4,
+      "brand": "Xiaomi",
+      "model": "Xiaomi 14 Pro",
+      "price": 800,
+      "image": "https://cdn.pixabay.com/photo/2020/06/23/09/36/mobile-phone-5339641_1280.jpg"
+    },
+    {
+      "id": 5,
+      "brand": "Redmi",
+      "model": "Redmi Note 13",
+      "price": 600,
+      "image": "https://cdn.pixabay.com/photo/2020/01/15/07/24/mobile-4765361_1280.jpg"
+    },
+    {
+      "id": 6,
+      "brand": "Honor",
+      "model": "Honor Magic 6",
+      "price": 700,
+      "image": "https://cdn.pixabay.com/photo/2018/03/01/19/30/smartphone-3194827_1280.jpg"
+    }
+  ],
+
+  "laptops": [
+    {
+      "id": 1,
+      "brand": "Apple",
+      "model": "MacBook Pro M3",
+      "price": 2300,
+      "image": "https://cdn.pixabay.com/photo/2015/01/21/14/14/apple-606761_1280.jpg"
+    },
+    {
+      "id": 2,
+      "brand": "HP",
+      "model": "Spectre x360",
+      "price": 1700,
+      "image": "https://cdn.pixabay.com/photo/2014/05/02/21/50/home-office-336377_1280.jpg"
+    },
+    {
+      "id": 3,
+      "brand": "ASUS",
+      "model": "ROG Zephyrus G14",
+      "price": 1800,
+      "image": "https://cdn.pixabay.com/photo/2014/05/02/21/50/home-office-336377_1280.jpg"
+    }
+  ],
+
+  "tablets": [
+    {
+      "id": 1,
+      "brand": "Apple",
+      "model": "iPad Pro 2024",
+      "price": 1400,
+      "image": "https://cdn.pixabay.com/photo/2015/01/21/14/14/apple-606761_1280.jpg"
+    },
+    {
+      "id": 2,
+      "brand": "Samsung",
+      "model": "Galaxy Tab S9",
+      "price": 950,
+      "image": "https://cdn.pixabay.com/photo/2017/01/23/23/57/iphone-2009417_1280.png"
+    }
+  ],
+
+  "tvs": [
+    {
+      "id": 1,
+      "brand": "Samsung",
+      "model": "Neo QLED 8K",
+      "price": 3000,
+      "image": "https://cdn.pixabay.com/photo/2016/03/27/19/40/tv-1283423_1280.jpg"
+    },
+    {
+      "id": 2,
+      "brand": "LG",
+      "model": "OLED evo G3",
+      "price": 2800,
+      "image": "https://cdn.pixabay.com/photo/2016/11/23/00/32/television-1850629_1280.jpg"
+    }
+  ]
+}
