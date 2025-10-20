@@ -15,6 +15,7 @@ const Profile = () => {
   const [emailNotify, setEmailNotify] = useState(true);
   const [country, setCountry] = useState("Россия");
   const [city, setCity] = useState("Санкт-Петербург");
+  const [userName, setUserName] = useState("");
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,22 +23,29 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.email && formData.password) setIsLoggedIn(true);
+    if (formData.email && formData.password) {
+      // Имя по e-mail
+      const nameFromEmail = formData.email.split("@")[0];
+      setUserName(nameFromEmail);
+      setIsLoggedIn(true);
+    }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setFormData({ email: "", password: "" });
+    setUserName("");
   };
 
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4 flex items-center justify-center">
         <div className="w-full max-w-5xl bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col lg:flex-row">
-          {/* Левая часть — красная */}
+          {/* Левая часть */}
           <div className="bg-red-500 text-white p-8 lg:w-1/2 flex flex-col justify-center">
             <h2 className="text-3xl font-bold mb-4">Вы ещё не с нами?</h2>
             <p className="text-base mb-6 leading-relaxed">
-              Создайте аккаунт чтобы получать уведомления об изменении цен и
+              Создайте аккаунт, чтобы получать уведомления об изменении цен и
               синхронизировать ваши товары на всех устройствах.
             </p>
             <button
@@ -103,11 +111,24 @@ const Profile = () => {
     );
   }
 
-  // === После входа: страница профиля ===
+  // === После входа ===
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Степан</h1>
+        <div className="flex items-center gap-3 mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            {userName || "Пользователь"}
+          </h1>
+          <button
+            onClick={() => {
+              const newName = prompt("Введите новое имя:", userName);
+              if (newName) setUserName(newName);
+            }}
+            className="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg"
+          >
+            Изменить имя
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Настройки */}
@@ -115,7 +136,9 @@ const Profile = () => {
             <h3 className="text-lg font-semibold mb-5">Настройки</h3>
 
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium">Получать push уведомления</span>
+              <span className="text-sm font-medium">
+                Получать push уведомления
+              </span>
               <button
                 onClick={() => setPushEnabled(!pushEnabled)}
                 className={`w-12 h-6 p-1 rounded-full ${
@@ -190,14 +213,15 @@ const Profile = () => {
               </span>
             </div>
             <p className="text-sm text-gray-600 mb-4">
-              Есть вопросы? Напишите нам — мы с радостью поможем с любой проблемой.
+              Есть вопросы? Напишите нам — мы с радостью поможем с любой
+              проблемой.
             </p>
             <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg w-full md:w-auto">
               Написать в поддержку
             </button>
           </div>
 
-          {/* Ваш аккаунт */}
+          {/* Аккаунт */}
           <div className="bg-white rounded-2xl shadow p-6">
             <h3 className="text-lg font-semibold mb-5">Ваш аккаунт</h3>
             <ul className="space-y-3 text-sm text-gray-700">
