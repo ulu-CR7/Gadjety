@@ -1,4 +1,3 @@
-// src/pages/Compare.jsx
 import React, { useEffect, useState } from "react";
 import { FaTrash, FaRegHeart } from "react-icons/fa";
 
@@ -15,11 +14,10 @@ function readLocal(key) {
 function saveLocal(key, data) {
   try {
     localStorage.setItem(key, JSON.stringify(data));
-  } catch {}
+  } catch { }
 }
 
 function safe(obj, path, fallback = "-") {
-  // path как 'raw.specs.cores' or 'price'
   try {
     if (!obj) return fallback;
     const parts = path.split(".");
@@ -59,28 +57,31 @@ export default function Compare() {
     setToast("Сравнение очищено");
   };
 
-  // подсчёт по категориям для табов (как в макете)
   const categories = Array.from(
-    items.reduce((m, it) => m.set(it.category || "Без категории", (m.get(it.category || "Без категории") || 0) + 1), new Map())
+    items.reduce(
+      (m, it) =>
+        m.set(it.category || "Без категории", (m.get(it.category || "Без категории") || 0) + 1),
+      new Map()
+    )
   );
 
   return (
-    <div className="min-h-screen pt-24 pb-24 px-4">
+    <div className="min-h-screen pt-24 pb-24 px-3 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Заголовок + кнопка очистки */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-semibold">Сравнение товаров</h1>
-          <button
-            onClick={clearAll}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500"
-          >
-            <FaTrash /> Удалить все списки
-          </button>
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-3 text-center sm:text-left">
+          <h1 className="text-2xl sm:text-3xl font-semibold">Сравнение товаров</h1>
+          {items.length > 0 && (
+            <button
+              onClick={clearAll}
+              className="flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-red-500 transition"
+            >
+              <FaTrash /> Удалить все списки
+            </button>
+          )}
         </div>
 
-        {/* Табсы категорий (если есть) */}
         {categories.length > 0 && (
-          <div className="flex gap-3 mb-6 flex-wrap">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 justify-center sm:justify-start">
             {categories.map(([cat, count]) => (
               <div
                 key={cat}
@@ -92,26 +93,37 @@ export default function Compare() {
           </div>
         )}
 
-        {/* Список карточек вверху */}
-        <div className="bg-white rounded-lg p-4 mb-6 shadow">
+        <div className="bg-white rounded-lg p-3 sm:p-4 mb-6 shadow">
           {items.length === 0 ? (
-            <div className="py-12 text-center text-gray-500">У вас пока нет товаров для сравнения</div>
+            <div className="py-10 sm:py-12 text-center text-gray-500 text-sm sm:text-base">
+              У вас пока нет товаров для сравнения
+            </div>
           ) : (
-            <div className="flex gap-4 overflow-x-auto py-2">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
               {items.map((p) => (
-                <div key={p.id} className="w-56 bg-gray-50 rounded-lg p-3 flex-shrink-0 relative">
+                <div
+                  key={p.id}
+                  className="w-48 sm:w-56 bg-gray-50 rounded-lg p-3 flex-shrink-0 relative hover:shadow-md transition"
+                >
                   <button
                     onClick={() => removeOne(p.id)}
-                    className="absolute right-2 top-2 text-gray-400 hover:text-red-500"
+                    className="absolute right-2 top-2 text-gray-400 hover:text-red-500 transition"
                     title="Удалить"
                   >
                     <FaTrash />
                   </button>
-                  <div className="h-36 bg-white rounded-md flex items-center justify-center mb-3 overflow-hidden">
+
+                  <div className="h-32 sm:h-36 bg-white rounded-md flex items-center justify-center mb-3 overflow-hidden">
                     <img
-                      src={p.image || (p.raw && (p.raw.thumbnail || (Array.isArray(p.raw.images) && p.raw.images[0]))) || ""}
+                      src={
+                        p.image ||
+                        (p.raw &&
+                          (p.raw.thumbnail ||
+                            (Array.isArray(p.raw.images) && p.raw.images[0]))) ||
+                        ""
+                      }
                       alt={p.title}
-                      className="object-contain max-h-full"
+                      className="object-contain max-h-full w-full"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
                         e.currentTarget.src =
@@ -119,11 +131,15 @@ export default function Compare() {
                       }}
                     />
                   </div>
-                  <div className="text-xs text-gray-500">{p.category}</div>
-                  <div className="font-semibold mt-1 line-clamp-2">{p.title}</div>
+
+                  <div className="text-xs text-gray-500 line-clamp-1">{p.category}</div>
+                  <div className="font-semibold mt-1 text-sm sm:text-base line-clamp-2">{p.title}</div>
+
                   <div className="mt-2 flex items-center justify-between">
-                    <div className="font-bold">{Number(p.price || 0).toLocaleString("ru-RU")} ₽</div>
-                    <button className="text-red-500" title="Добавить в избранное">
+                    <div className="font-bold text-sm sm:text-base">
+                      {Number(p.price || 0).toLocaleString("ru-RU")} ₽
+                    </div>
+                    <button className="text-red-500 hover:text-red-600" title="Добавить в избранное">
                       <FaRegHeart />
                     </button>
                   </div>
@@ -133,40 +149,40 @@ export default function Compare() {
           )}
         </div>
 
-        {/* Таблица сравнения */}
         {items.length > 0 && (
-          <div className="bg-white rounded-lg p-4 shadow">
-            <h2 className="text-lg font-semibold mb-4">Сравнение товаров</h2>
+          <div className="bg-white rounded-lg p-3 sm:p-4 shadow">
+            <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
+              Таблица сравнения
+            </h2>
 
             <div className="overflow-x-auto">
-              <table className="w-full table-fixed border-collapse">
+              <table className="w-full min-w-[600px] border-collapse text-sm sm:text-base">
                 <thead>
-                  <tr>
-                    <th className="w-48 text-left p-3"></th>
+                  <tr className="border-b">
+                    <th className="w-40 sm:w-48 text-left p-3"></th>
                     {items.map((p) => (
                       <th key={p.id} className="p-3 text-left border-l">
-                        <div className="font-medium">{p.title}</div>
+                        <div className="font-medium line-clamp-2">{p.title}</div>
                       </th>
                     ))}
                   </tr>
                 </thead>
 
                 <tbody>
-                  {/* Рейтинг */}
                   <tr className="bg-gray-50">
                     <td className="p-3 font-semibold">Рейтинг</td>
                     {items.map((p) => (
                       <td key={p.id + "-rating"} className="p-3 border-l">
                         <div className="flex items-center gap-2">
-                          {/* можно рендерить звезды, пока просто значение */}
-                          <div className="text-yellow-400">★★★★☆</div>
-                          <div className="text-sm text-gray-500"> {safe(p, "raw.rating", "4.2")}</div>
+                          <div className="text-yellow-400 text-xs sm:text-base">★★★★☆</div>
+                          <div className="text-gray-500 text-xs sm:text-sm">
+                            {safe(p, "raw.rating", "4.2")}
+                          </div>
                         </div>
                       </td>
                     ))}
                   </tr>
 
-                  {/* Модель */}
                   <tr>
                     <td className="p-3 font-semibold">Модель</td>
                     {items.map((p) => (
@@ -176,7 +192,6 @@ export default function Compare() {
                     ))}
                   </tr>
 
-                  {/* Год релиза */}
                   <tr className="bg-gray-50">
                     <td className="p-3 font-semibold">Год релиза</td>
                     {items.map((p) => (
@@ -186,46 +201,58 @@ export default function Compare() {
                     ))}
                   </tr>
 
-                  {/* Количество ядер (пример) */}
                   <tr>
                     <td className="p-3 font-semibold">Количество ядер</td>
                     {items.map((p) => (
                       <td key={p.id + "-cores"} className="p-3 border-l">
-                        {/* пробуем взять из raw.specs или raw.cpu, иначе "-" */}
-                        {safe(p, "raw.specs.cores", safe(p, "raw.cores", safe(p, "raw.rawCores", "-")))}
+                        {safe(
+                          p,
+                          "raw.specs.cores",
+                          safe(p, "raw.cores", safe(p, "raw.rawCores", "-"))
+                        )}
                       </td>
                     ))}
                   </tr>
 
-                  {/* Поддержка 4G (LTE) */}
                   <tr className="bg-gray-50">
-                    <td className="p-3 font-semibold">Поддержка сетей 4G (LTE)</td>
+                    <td className="p-3 font-semibold">Поддержка 4G (LTE)</td>
                     {items.map((p) => {
                       const v = safe(p, "raw.lte", safe(p, "raw.features", "-"));
-                      const yes = String(v).toLowerCase().includes("lte") || String(v) === "true" || String(v) === "yes" || String(v) === "1";
+                      const yes =
+                        String(v).toLowerCase().includes("lte") ||
+                        ["true", "yes", "1"].includes(String(v).toLowerCase());
                       return (
-                        <td key={p.id + "-lte"} className="p-3 border-l">
-                          {yes ? <span className="text-green-600">✓</span> : <span className="text-red-500">✕</span>}
+                        <td key={p.id + "-lte"} className="p-3 border-l text-center">
+                          {yes ? (
+                            <span className="text-green-600">✓</span>
+                          ) : (
+                            <span className="text-red-500">✕</span>
+                          )}
                         </td>
                       );
                     })}
                   </tr>
 
-                  {/* Объем встроенной памяти */}
                   <tr>
-                    <td className="p-3 font-semibold">Объём встроенной памяти</td>
+                    <td className="p-3 font-semibold">Объём памяти</td>
                     {items.map((p) => (
                       <td key={p.id + "-storage"} className="p-3 border-l">
-                        {safe(p, "raw.storage", safe(p, "raw.specs.storage", safe(p, "raw.memory", "-")))}
+                        {safe(
+                          p,
+                          "raw.storage",
+                          safe(p, "raw.specs.storage", safe(p, "raw.memory", "-"))
+                        )}
                       </td>
                     ))}
                   </tr>
 
-                  {/* Дополнительно: описание */}
                   <tr className="bg-gray-50">
                     <td className="p-3 font-semibold">Описание</td>
                     {items.map((p) => (
-                      <td key={p.id + "-desc"} className="p-3 border-l text-sm text-gray-700">
+                      <td
+                        key={p.id + "-desc"}
+                        className="p-3 border-l text-xs sm:text-sm text-gray-700 leading-snug"
+                      >
                         {safe(p, "raw.description", p.raw?.description || "-")}
                       </td>
                     ))}
@@ -236,13 +263,11 @@ export default function Compare() {
           </div>
         )}
 
-        {/* Пустой отступ */}
         <div className="h-8" />
       </div>
 
-      {/* Toast */}
       {toast && (
-        <div className="fixed left-1/2 -translate-x-1/2 bottom-24 bg-black text-white px-4 py-2 rounded-lg z-50">
+        <div className="fixed left-1/2 -translate-x-1/2 bottom-24 bg-black text-white text-sm sm:text-base px-4 py-2 rounded-lg z-50 shadow-lg">
           {toast}
         </div>
       )}

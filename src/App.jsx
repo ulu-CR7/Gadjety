@@ -21,7 +21,6 @@ import Product from "./pages/Product";
 import Compare from "./pages/Compare";
 
 const App = () => {
-  // const [favorites, setFavorites] = useState([]);
   return (
     <Router>
       <Header />

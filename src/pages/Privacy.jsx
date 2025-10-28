@@ -114,7 +114,6 @@ const PrivacyPolicy = () => {
         </ul>
       </aside>
 
-      {/* Контент */}
       <main className="flex-1">{content[activeSection]}</main>
     </div>
   );

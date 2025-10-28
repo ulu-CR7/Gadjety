@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const COUNTRIES = {
   Россия: ["Москва", "Санкт-Петербург", "Казань", "Екатеринбург"],
@@ -8,14 +9,37 @@ const COUNTRIES = {
 };
 
 const Profile = () => {
+  const navigate = useNavigate();
+
+  // Загружаем сохранённые данные при запуске
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
+  const [formData, setFormData] = useState(
+    JSON.parse(localStorage.getItem("formData")) || { email: "", password: "" }
+  );
+  const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+  const [pushEnabled, setPushEnabled] = useState(
+    localStorage.getItem("pushEnabled") === "true"
+  );
+  const [emailNotify, setEmailNotify] = useState(
+    localStorage.getItem("emailNotify") === "true"
+  );
+  const [country, setCountry] = useState(localStorage.getItem("country") || "Россия");
+  const [city, setCity] = useState(localStorage.getItem("city") || "Санкт-Петербург");
+
+  // Сохраняем всё в localStorage при каждом изменении
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", isLoggedIn);
+    localStorage.setItem("formData", JSON.stringify(formData));
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("pushEnabled", pushEnabled);
+    localStorage.setItem("emailNotify", emailNotify);
+    localStorage.setItem("country", country);
+    localStorage.setItem("city", city);
+  }, [isLoggedIn, formData, userName, pushEnabled, emailNotify, country, city]);
+
   const [isLogin, setIsLogin] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [pushEnabled, setPushEnabled] = useState(true);
-  const [emailNotify, setEmailNotify] = useState(true);
-  const [country, setCountry] = useState("Россия");
-  const [city, setCity] = useState("Санкт-Петербург");
-  const [userName, setUserName] = useState("");
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +48,6 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.email && formData.password) {
-      // Имя по e-mail
       const nameFromEmail = formData.email.split("@")[0];
       setUserName(nameFromEmail);
       setIsLoggedIn(true);
@@ -33,8 +56,9 @@ const Profile = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setFormData({ email: "", password: "" });
-    setUserName("");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("formData");
+    localStorage.removeItem("userName");
   };
 
   if (!isLoggedIn) {
@@ -71,7 +95,7 @@ const Profile = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="vladimir1998@mail.ru"
+                  placeholder="example@gmail.com"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
                 />
               </div>
@@ -206,17 +230,13 @@ const Profile = () => {
           {/* Поддержка */}
           <div className="bg-white rounded-2xl shadow p-6">
             <h3 className="text-lg font-semibold mb-5">Поддержка</h3>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm">Ваши вопросы</span>
-              <span className="bg-red-100 text-red-500 px-2 py-1 rounded-full text-xs">
-                6
-              </span>
-            </div>
             <p className="text-sm text-gray-600 mb-4">
-              Есть вопросы? Напишите нам — мы с радостью поможем с любой
-              проблемой.
+              Есть вопросы? Напишите нам — мы с радостью поможем!
             </p>
-            <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg w-full md:w-auto">
+            <button
+              onClick={() => navigate("/support")}
+              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg w-full md:w-auto"
+            >
               Написать в поддержку
             </button>
           </div>
@@ -236,7 +256,10 @@ const Profile = () => {
               </li>
               <li
                 onClick={() => {
-                  if (window.confirm("Удалить аккаунт?")) setIsLoggedIn(false);
+                  if (window.confirm("Удалить аккаунт?")) {
+                    localStorage.clear();
+                    setIsLoggedIn(false);
+                  }
                 }}
                 className="text-red-500 cursor-pointer"
               >

@@ -1,13 +1,12 @@
-// src/pages/Tablets.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart, FaBalanceScale } from "react-icons/fa";
-import tabletImg from "../assets/img/tablet.png"; // использую ваш tablet.png
+import tabletImg from "../assets/img/tablet.png";
 import accessoriesImg from "../assets/img/accessories.png";
 import smartphoneImg from "../assets/img/smartphone.png";
 
 const ITEMS_PER_PAGE = 10;
-const TOTAL_PAGES = 8; // 8 страниц
+const TOTAL_PAGES = 8;
 const FAVORITES_KEY = "behoof_favorites_v1";
 const COMPARE_KEY = "behoof_compare_v1";
 
@@ -46,81 +45,17 @@ function normalizeProductForSave(p) {
   };
 }
 
-/*
-  Явный список базовых моделей планшетов — откуда мы генерируем 80 уникальных товаров.
-  Можно дописывать/редактировать названия, описания, цены и изображения.
-*/
 const BASE_TABLETS = [
-  {
-    slug: "ipad-pro",
-    title: "Apple iPad Pro 11",
-    price: 899,
-    image: tabletImg,
-    description: "11\" Liquid Retina, M1, отличный планшет для творчества и работы."
-  },
-  {
-    slug: "ipad-air",
-    title: "Apple iPad Air",
-    price: 599,
-    image: tabletImg,
-    description: "Лёгкий и мощный iPad Air с отличным экраном."
-  },
-  {
-    slug: "samsung-tab-s8",
-    title: "Samsung Galaxy Tab S8",
-    price: 749,
-    image: tabletImg,
-    description: "Флагманский Android-планшет с ярким дисплеем и мощным железом."
-  },
-  {
-    slug: "lenovo-tab-p11",
-    title: "Lenovo Tab P11",
-    price: 349,
-    image: tabletImg,
-    description: "Доступный планшет с хорошим экраном для мультимедиа."
-  },
-  {
-    slug: "huawei-matepad",
-    title: "Huawei MatePad 11",
-    price: 419,
-    image: tabletImg,
-    description: "Планшет для работы и развлечений с ярким экраном."
-  },
-  {
-    slug: "xiaomi-pad",
-    title: "Xiaomi Pad 5",
-    price: 399,
-    image: tabletImg,
-    description: "Быстрый и недорогой планшет от Xiaomi."
-  },
-  {
-    slug: "amazon-fire",
-    title: "Amazon Fire HD 10",
-    price: 149,
-    image: accessoriesImg,
-    description: "Бюджетный планшет для чтения и просмотра видео."
-  },
-  {
-    slug: "microsoft-surface",
-    title: "Microsoft Surface Go",
-    price: 549,
-    image: smartphoneImg,
-    description: "Компактный планшет с поддержкой клавиатуры и Windows."
-  },
-  {
-    slug: "acer-tab",
-    title: "Acer Tab 10",
-    price: 279,
-    image: tabletImg,
-    description: "Практичный планшет для учебы и работы."
-  },
-  {
-    slug: "asus-zenpad",
-    title: "ASUS ZenPad",
-    price: 329,
-    image: tabletImg,
-    description: "Удобный планшет с отличным соотношением цены и качества."
-  }
+  { slug: "ipad-pro", title: "Apple iPad Pro 11", price: 899, image: tabletImg, description: "11\" Liquid Retina, M1, отличный планшет для творчества и работы." },
+  { slug: "ipad-air", title: "Apple iPad Air", price: 599, image: tabletImg, description: "Лёгкий и мощный iPad Air с отличным экраном." },
+  { slug: "samsung-tab-s8", title: "Samsung Galaxy Tab S8", price: 749, image: tabletImg, description: "Флагманский Android-планшет с ярким дисплеем и мощным железом." },
+  { slug: "lenovo-tab-p11", title: "Lenovo Tab P11", price: 349, image: tabletImg, description: "Доступный планшет с хорошим экраном для мультимедиа." },
+  { slug: "huawei-matepad", title: "Huawei MatePad 11", price: 419, image: tabletImg, description: "Планшет для работы и развлечений с ярким экраном." },
+  { slug: "xiaomi-pad", title: "Xiaomi Pad 5", price: 399, image: tabletImg, description: "Быстрый и недорогой планшет от Xiaomi." },
+  { slug: "amazon-fire", title: "Amazon Fire HD 10", price: 149, image: accessoriesImg, description: "Бюджетный планшет для чтения и просмотра видео." },
+  { slug: "microsoft-surface", title: "Microsoft Surface Go", price: 549, image: smartphoneImg, description: "Компактный планшет с поддержкой клавиатуры и Windows." },
+  { slug: "acer-tab", title: "Acer Tab 10", price: 279, image: tabletImg, description: "Практичный планшет для учебы и работы." },
+  { slug: "asus-zenpad", title: "ASUS ZenPad", price: 329, image: tabletImg, description: "Удобный планшет с отличным соотношением цены и качества." }
 ];
 
 export default function Tablets() {
@@ -133,30 +68,27 @@ export default function Tablets() {
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    // генерируем ровно ITEMS_PER_PAGE * TOTAL_PAGES товаров
     const generate = () => {
-      const needed = ITEMS_PER_PAGE * TOTAL_PAGES; // 80
+      const needed = ITEMS_PER_PAGE * TOTAL_PAGES;
       const items = [];
       const suffixes = ["Pro", "Plus", "Max", "2023", "S", "Lite", "SE", "Ultra", "Neo", "Mini"];
       let idx = 0;
       while (items.length < needed) {
         const base = BASE_TABLETS[idx % BASE_TABLETS.length];
         const repeat = Math.floor(idx / BASE_TABLETS.length);
-        const id = `t${items.length + 1}`; // t1..t80
+        const id = `t${items.length + 1}`;
         const suffix = suffixes[items.length % suffixes.length];
         const title = `${base.title} ${suffix}`;
-        // делаем небольшую вариацию цены
         const priceVariation = base.price + ((items.length % 5) * 10) + repeat * 5;
-        const imageChoice = base.image;
         items.push({
           id,
           title,
           baseSlug: base.slug,
           category: "Планшеты",
           price: priceVariation,
-          image: imageChoice,
+          image: base.image,
           description: base.description + ` Модель версия ${suffix}.`,
-          thumbnail: imageChoice
+          thumbnail: base.image,
         });
         idx++;
       }
@@ -165,12 +97,10 @@ export default function Tablets() {
 
     setLoading(true);
     const products = generate();
-    // небольшой таймаут для UX (можно убрать)
     setTimeout(() => {
       setAllProducts(products);
       setLoading(false);
     }, 250);
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => { saveLocal(FAVORITES_KEY, favorites); }, [favorites]);
@@ -183,7 +113,6 @@ export default function Tablets() {
   }, [toast]);
 
   const showToast = (text) => setToast(text);
-
   const isFav = (id) => favorites.some((p) => String(p.id) === String(id));
   const isCompared = (id) => compareList.some((p) => String(p.id) === String(id));
 
@@ -220,49 +149,65 @@ export default function Tablets() {
   );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Планшеты</h1>
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Планшеты</h1>
 
       {loading ? (
         <p className="text-center text-gray-500">Загрузка...</p>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {currentProducts.map((product) => {
               const src = product.image || product.thumbnail || PLACEHOLDER;
               return (
-                <div key={product.id} className="flex border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                <div
+                  key={product.id}
+                  className="flex flex-col sm:flex-row border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+                >
                   <img
                     src={src}
                     alt={product.title}
-                    className="w-40 h-40 object-contain rounded-lg mr-6 flex-shrink-0 bg-white"
+                    className="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-lg mb-4 sm:mb-0 sm:mr-6 mx-auto bg-white"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = PLACEHOLDER;
                     }}
                   />
-                  <div className="flex-1 flex flex-col justify-between">
+
+                  <div className="flex-1 flex flex-col justify-between text-center sm:text-left">
                     <div>
-                      <h2 className="text-xl font-bold mb-2">{product.title}</h2>
-                      <p className="text-gray-700 mb-4 line-clamp-3">{product.description}</p>
-                      <div className="text-gray-800 font-semibold text-lg">{product.price} $</div>
+                      <h2 className="text-lg sm:text-xl font-bold mb-2">{product.title}</h2>
+                      <p className="text-gray-700 mb-4 line-clamp-3 text-sm sm:text-base">
+                        {product.description}
+                      </p>
+                      <div className="text-gray-800 font-semibold text-lg">
+                        {product.price} $
+                      </div>
                     </div>
 
-                    <div className="mt-4 flex items-center gap-3">
+                    <div className="mt-4 flex flex-col sm:flex-row items-center sm:items-start gap-3">
                       <button
                         onClick={() => toggleFavorite(product)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                          isFav(product.id) ? "bg-red-100 border-red-200 text-red-600" : "bg-white hover:bg-gray-50"
+                        className={`flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto px-3 py-2 rounded-lg border ${
+                          isFav(product.id)
+                            ? "bg-red-100 border-red-200 text-red-600"
+                            : "bg-white hover:bg-gray-50"
                         }`}
                       >
-                        {isFav(product.id) ? <FaHeart className="text-red-500" /> : <FaRegHeart className="text-gray-500" />}
+                        {isFav(product.id) ? (
+                          <FaHeart className="text-red-500" />
+                        ) : (
+                          <FaRegHeart className="text-gray-500" />
+                        )}
                         <span className="text-sm">В избранное</span>
                       </button>
 
                       <button
                         onClick={() => toggleCompare(product)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                          isCompared(product.id) ? "bg-yellow-50 border-yellow-200 text-yellow-700" : "bg-white hover:bg-gray-50"
+                        className={`flex items-center justify-center sm:justify-start gap-2 w-full sm:w-auto px-3 py-2 rounded-lg border ${
+                          isCompared(product.id)
+                            ? "bg-yellow-50 border-yellow-200 text-yellow-700"
+                            : "bg-white hover:bg-gray-50"
                         }`}
                       >
                         <FaBalanceScale className="text-gray-600" />
@@ -271,7 +216,7 @@ export default function Tablets() {
 
                       <button
                         onClick={() => navigate(`/product/${product.id}`)}
-                        className="ml-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
+                        className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
                       >
                         Перейти к товару
                       </button>
@@ -282,8 +227,7 @@ export default function Tablets() {
             })}
           </div>
 
-          {/* Пагинация: рендерим страницы 1..8 */}
-          <div className="flex justify-center items-center gap-3 mt-8 text-gray-600 flex-wrap">
+          <div className="flex justify-center items-center gap-2 sm:gap-3 mt-8 text-gray-600 flex-wrap">
             <button
               className="px-3 py-1 rounded hover:bg-gray-200 disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -297,7 +241,9 @@ export default function Tablets() {
               return (
                 <button
                   key={page}
-                  className={`px-3 py-1 rounded ${page === currentPage ? "bg-red-500 text-white" : "hover:bg-gray-200"}`}
+                  className={`px-3 py-1 rounded ${
+                    page === currentPage ? "bg-red-500 text-white" : "hover:bg-gray-200"
+                  }`}
                   onClick={() => setCurrentPage(page)}
                 >
                   {page}

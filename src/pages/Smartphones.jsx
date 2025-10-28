@@ -1,10 +1,9 @@
-// src/pages/Smartphones.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart, FaBalanceScale } from "react-icons/fa";
 
 const ITEMS_PER_PAGE = 10;
-const TOTAL_REPEAT = 4; // сколько раз расширяем массив (примерно)
+const TOTAL_REPEAT = 4;
 const FAVORITES_KEY = "behoof_favorites_v1";
 const COMPARE_KEY = "behoof_compare_v1";
 
@@ -74,9 +73,7 @@ export default function Smartphones() {
     return () => clearTimeout(t);
   }, [toast]);
 
-  const showToast = (text) => {
-    setToast(text);
-  };
+  const showToast = (text) => setToast(text);
 
   const isFav = (id) => favorites.some((p) => String(p.id) === String(id));
   const isCompared = (id) => compareList.some((p) => String(p.id) === String(id));
@@ -113,9 +110,7 @@ export default function Smartphones() {
       const res = await fetch("https://dummyjson.com/products/category/smartphones?limit=20");
       const data = await res.json();
 
-      // суффиксы для разных моделей, чтобы было визуально разнообразие
       const suffixes = ["Pro", "Max", "Lite", "2023", "S", "Plus", "Neo", "Ultra", "SE", "Edition"];
-
       let extended = [];
       for (let rep = 0; rep < TOTAL_REPEAT; rep++) {
         data.products.forEach((p, idx) => {
@@ -135,8 +130,6 @@ export default function Smartphones() {
           });
         });
       }
-
-      // Обрезаем до аккуратного размера (например ITEMS_PER_PAGE * 8)
       extended = extended.slice(0, ITEMS_PER_PAGE * 8);
       setAllProducts(extended);
     } catch (e) {
@@ -153,14 +146,15 @@ export default function Smartphones() {
   );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Смартфоны</h1>
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Смартфоны</h1>
 
       {loading ? (
         <p className="text-center text-gray-500">Загрузка...</p>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* адаптивная сетка */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
             {currentProducts.map((product) => {
               const src =
                 product.image ||
@@ -171,12 +165,12 @@ export default function Smartphones() {
               return (
                 <div
                   key={product.id}
-                  className="flex border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+                  className="flex flex-col sm:flex-row border rounded-lg p-4 shadow-sm hover:shadow-md transition bg-white"
                 >
                   <img
                     src={src}
                     alt={product.title}
-                    className="w-40 h-40 object-contain rounded-lg mr-6 flex-shrink-0 bg-white"
+                    className="w-full sm:w-40 h-48 sm:h-40 object-contain rounded-lg mb-4 sm:mb-0 sm:mr-6 bg-white"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = PLACEHOLDER;
@@ -185,17 +179,19 @@ export default function Smartphones() {
 
                   <div className="flex-1 flex flex-col justify-between">
                     <div>
-                      <h2 className="text-xl font-bold mb-2">{product.title}</h2>
-                      <p className="text-gray-700 mb-4 line-clamp-3">{product.description}</p>
-                      <div className="text-gray-800 font-semibold text-lg">
+                      <h2 className="text-lg sm:text-xl font-bold mb-2">{product.title}</h2>
+                      <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base line-clamp-3">
+                        {product.description}
+                      </p>
+                      <div className="text-gray-800 font-semibold text-base sm:text-lg">
                         {product.price} $
                       </div>
                     </div>
 
-                    <div className="mt-4 flex items-center gap-3">
+                    <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3">
                       <button
                         onClick={() => toggleFavorite(product)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                        className={`flex items-center gap-1 sm:gap-2 px-3 py-2 rounded-lg border text-sm sm:text-base ${
                           isFav(product.id)
                             ? "bg-red-100 border-red-200 text-red-600"
                             : "bg-white hover:bg-gray-50"
@@ -206,26 +202,26 @@ export default function Smartphones() {
                         ) : (
                           <FaRegHeart className="text-gray-500" />
                         )}
-                        <span className="text-sm">В избранное</span>
+                        <span>В избранное</span>
                       </button>
 
                       <button
                         onClick={() => toggleCompare(product)}
-                        className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                        className={`flex items-center gap-1 sm:gap-2 px-3 py-2 rounded-lg border text-sm sm:text-base ${
                           isCompared(product.id)
                             ? "bg-yellow-50 border-yellow-200 text-yellow-700"
                             : "bg-white hover:bg-gray-50"
                         }`}
                       >
                         <FaBalanceScale className="text-gray-600" />
-                        <span className="text-sm">Сравнить</span>
+                        <span>Сравнить</span>
                       </button>
 
                       <button
                         onClick={() => navigate(`/product/${product.id}`)}
-                        className="ml-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
+                        className="ml-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg px-4 py-2 transition w-full sm:w-auto text-center"
                       >
-                        Перейти к товару
+                        Перейти
                       </button>
                     </div>
                   </div>
@@ -234,10 +230,9 @@ export default function Smartphones() {
             })}
           </div>
 
-          {/* Пагинация */}
-          <div className="flex justify-center items-center gap-3 mt-8 text-gray-600 flex-wrap">
+          <div className="flex justify-center items-center gap-2 sm:gap-3 mt-8 text-gray-600 flex-wrap">
             <button
-              className="px-3 py-1 rounded hover:bg-gray-200 disabled:opacity-50"
+              className="px-3 py-1 rounded hover:bg-gray-200 disabled:opacity-50 text-sm sm:text-base"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
@@ -249,7 +244,7 @@ export default function Smartphones() {
               return (
                 <button
                   key={page}
-                  className={`px-3 py-1 rounded ${
+                  className={`px-3 py-1 rounded text-sm sm:text-base ${
                     page === currentPage ? "bg-red-500 text-white" : "hover:bg-gray-200"
                   }`}
                   onClick={() => setCurrentPage(page)}
@@ -260,7 +255,7 @@ export default function Smartphones() {
             })}
 
             <button
-              className="px-3 py-1 rounded hover:bg-gray-200 disabled:opacity-50"
+              className="px-3 py-1 rounded hover:bg-gray-200 disabled:opacity-50 text-sm sm:text-base"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
@@ -270,9 +265,8 @@ export default function Smartphones() {
         </>
       )}
 
-      {/* Toast */}
       {toast && (
-        <div className="fixed left-1/2 -translate-x-1/2 bottom-24 bg-black text-white px-4 py-2 rounded-lg shadow-lg z-50">
+        <div className="fixed left-1/2 -translate-x-1/2 bottom-24 bg-black text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm sm:text-base">
           {toast}
         </div>
       )}
